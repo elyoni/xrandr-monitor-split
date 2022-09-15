@@ -18,8 +18,8 @@ class XRandr:
                 return monitor
         return ""
 
-    def _get_primary_monitor_res(self) -> str:
-        monitor_info = self._get_primary_monitor_raw()
+    #  def _get_primary_monitor_res(self) -> str:
+    #      monitor_info = self._get_primary_monitor_raw()
 
     def _get_monitor_info_by_name(self, name) -> str:
         for monitor_info in self.list_active_monitors:
@@ -35,7 +35,12 @@ class XRandr:
         #  xrandr --setmonitor DP-0-2 1280/597x1440/336+1280+0  none
         self._update_list_active_monitors()
         primary_monitor_info = self._get_primary_monitor_raw()
-        primary_monitor_name = self._get_monitor_name(primary_monitor_info)
+        try:
+            primary_monitor_name = self._get_monitor_name(primary_monitor_info)
+        except IndexError:
+            print("Error: If you are in split mode restore and split again")
+            return False
+
         primary_monitor_res = self._get_monitor_res(primary_monitor_info)
         width_px: int = self._get_monitor_width_px(monitor_name = primary_monitor_name)
         x_offset = self._get_monitor_x_offset(monitor_name = primary_monitor_name)
@@ -50,7 +55,7 @@ class XRandr:
             primary_monitor_res = self._set_monitor_x_offset(primary_monitor_res, x_offset)
             command = f"xrandr --setmonitor V-{primary_monitor_name}-{ratio} {primary_monitor_res} {vmonitor_name}"
             print(command)
-            output = subprocess.run(shlex.split(command), capture_output=True, encoding="utf-8")
+            subprocess.run(shlex.split(command), capture_output=True, encoding="utf-8")
             
             # Prepare for next stage
             vmonitor_offset = new_width_px
@@ -58,14 +63,12 @@ class XRandr:
         return True
     
     def restore_primary_monitor(self) -> bool:
-        # xrandr --delmonitor DP-0-2
-        # xrandr --delmonitor DP-0-1
-
         self._update_list_active_monitors()
         for vmonitor in self._get_virtual_monitors():
             monitor_name = self._get_monitor_name(vmonitor)
             command = f"xrandr --delmonitor {monitor_name}"
-            output = subprocess.run(shlex.split(command), capture_output=True, encoding="utf-8")
+            subprocess.run(shlex.split(command), capture_output=True, encoding="utf-8")
+        return True
 
 
 
@@ -78,9 +81,9 @@ class XRandr:
         return vmonitor_list
 
     def _get_monitor_name(self, monitor_info: str) -> str:
-         return re.sub(r"^\W+", "", monitor_info.split()[1])
+        return re.sub(r"^\W+", "", monitor_info.split()[1])
     
-    def _get_monitor_res(self, monitor_info):
+    def _get_monitor_res(self, monitor_info) -> str:
         return monitor_info.split()[2]
 
     def _get_monitor_width_px(self, monitor_name: str):
@@ -88,15 +91,15 @@ class XRandr:
         return int(monitor_info.split()[2].split("/")[0])
 
     def _set_monitor_width_px(self, monitor_res: str, width_px: int):
-        monitor_res = monitor_res.split("/")
-        monitor_res[0] = str(width_px)
-        monitor_res = "/".join(monitor_res)
+        monitor_res_tmp = monitor_res.split("/")
+        monitor_res_tmp[0] = str(width_px)
+        monitor_res = "/".join(monitor_res_tmp)
         return monitor_res
 
     def _set_monitor_x_offset(self, monitor_res: str, x_offset: int):
-        monitor_res =  monitor_res.split("+")
-        monitor_res[1] = str(x_offset)
-        monitor_res = "+".join(monitor_res)
+        monitor_res_tmp =  monitor_res.split("+")
+        monitor_res_tmp[1] = str(x_offset)
+        monitor_res = "+".join(monitor_res_tmp)
         return monitor_res
 
     def _get_monitor_x_offset(self, monitor_name: str = ""):
