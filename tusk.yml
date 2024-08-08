@@ -1,0 +1,5 @@
+tasks:
+  split:
+    run: "poetry run xrandr-split"
+  restore:
+    run: "poetry run xrandr-restore"

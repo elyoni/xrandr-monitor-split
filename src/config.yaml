@@ -1,0 +1,19 @@
+nodes:
+  - type: vertical
+    nodes:
+      - width: 70
+        type: horizontal
+        nodes:
+          - width: 60
+            type: window
+          - width: 40
+            type: window
+      - width: 25
+        type: vertical
+        nodes:
+          - width: 50
+            type: window
+          - width: 50
+            type: window
+      - width: 5
+        type: window

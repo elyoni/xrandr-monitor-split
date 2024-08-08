@@ -3,11 +3,12 @@ name = "xrandr-monitor-split"
 version = "0.1.1"
 description = ""
 authors = ["Yehonatan Elentok <elyoni@gmail.com>"]
-readme = "README.md"
+readme = "README.adoc"
 packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+pyyaml = "^6.0.2"
 
 [tool.poetry.scripts]
 xrandr-split = 'src.main:split_primary'
