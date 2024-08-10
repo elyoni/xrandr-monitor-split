@@ -58,7 +58,7 @@ The CLI tool provides several commands for managing monitor configurations.
 .Example:
 [source,sh]
 ----
-xms split myconfig.yaml
+xms split myconfig
 ----
 
 - `restore`::
