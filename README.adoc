@@ -1,0 +1,28 @@
+= XRander Single Monitor Split
+
+This application is a simple wrapper around xrandr to split a single monitor into two virtual monitors. Verify usful for ultrawide monitors.
+
+* From the name of the application, it only works with xrandr (X11 server).
+* This application is only working with the primary monitor.
+
+
+== Usage
+
+IMPORTANT: Splitting the monitor 50% 50% will not work. You can configure the split to be 49% 51% or 51% 49% and it will work.
+
+.Split the primary monitor into two virtual monitors. The first one will be 70% of the original monitor, the second one will be 30%.
+----
+$ xrandr-split 70 30
+----
+
+.Restore the original monitor.
+----
+$ xrandr-restore
+----
+
+== Install
+
+.Using pipx
+----
+pipx install git+https://github.com/elyoni/xrandr-monitor-split.git
+----
