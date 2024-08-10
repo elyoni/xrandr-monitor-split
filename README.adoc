@@ -5,6 +5,39 @@ This application is a simple wrapper around xrandr to split a single monitor int
 * From the name of the application, it only works with xrandr (X11 server).
 * This application only works with the primary monitor.
 
+
+== Example
+
+Given the following configuration file:
+[source,yaml]
+----
+nodes:
+  - type: vertical
+    nodes:
+      - width: 80
+        type: horizontal
+        nodes:
+          - width: 80
+            type: window
+          - width: 20
+            type: window
+      - width: 20
+        type: window
+----
+
+Output:
+
+.Before Splitting
+image::docs/full-screen.png[Before Splitting,1000]
+.After Splitting
+image::docs/full-screen-split.png[After Splitting,1000]
+
+[cols="a,a", frame=none, grid=none]
+|===
+|===
+
+
+
 == Installation
 
 .Using pipx
@@ -128,6 +161,15 @@ nodes:
 - `width`:: Defines the percentage of space the split or window will take relative to its parent container.
 
 This structure allows you to flexibly define how the monitor is split into various virtual monitors or windows, accommodating different screen setups and preferences.
+
+
+== Motivation
+When the coronavirus pandemic began, the shift from face-to-face interactions to online communication became essential. Tools like Teams and Zoom, initially unable to share specific parts of the screen or single windows, offered only the option to share the entire screen (Because Linux). Additionally, Microsoft Teams prevented viewing other participants while screen sharing, which created challenges in maintaining effective communication during meetings.
+
+Initially, I tried using multiple monitors to address this issue—sharing one screen while viewing participants on another. However, I found this setup to be neither ergonomic nor practical. I decided to switch from using two 24-inch monitors to a single 27-inch monitor. To optimize this setup, I developed a small CLI application that vertically split the screen into two sections. This solution, while an improvement, presented some issues, such as awkward screen ratios when sharing.
+
+Despite these challenges, I discovered the value of screen splitting for multitasking. Each section of the screen functioned as a separate workspace, allowing me to effortlessly switch between tasks while keeping everything visible at once. Recognizing the potential of this approach, I decided to further develop the application, enhancing it with the ability to resize the monitor into multiple parts, both vertically and horizontally, to better meet the demands of a dynamic and productive work environment.
+
 
 == Dependencies
 
