@@ -1,28 +1,142 @@
-= XRander Single Monitor Split
+= X-Screen Split CLI Tool
 
-This application is a simple wrapper around xrandr to split a single monitor into two virtual monitors. Verify usful for ultrawide monitors.
+This application is a simple wrapper around xrandr to split a single monitor into two virtual monitors. It is particularly useful for ultrawide monitors.
 
 * From the name of the application, it only works with xrandr (X11 server).
-* This application is only working with the primary monitor.
+* This application only works with the primary monitor.
 
-
-== Usage
-
-IMPORTANT: Splitting the monitor 50% 50% will not work. You can configure the split to be 49% 51% or 51% 49% and it will work.
-
-.Split the primary monitor into two virtual monitors. The first one will be 70% of the original monitor, the second one will be 30%.
-----
-$ xrandr-split 70 30
-----
-
-.Restore the original monitor.
-----
-$ xrandr-restore
-----
-
-== Install
+== Installation
 
 .Using pipx
 ----
 pipx install git+https://github.com/elyoni/xrandr-monitor-split.git
 ----
+
+== Usage
+
+The CLI tool provides several commands for managing monitor configurations.
+
+=== Main Commands
+
+- `split [CONFIG_FILE]`::
+  Splits the primary monitor based on the provided config file.
+  Defaults to `configs.yaml` if no file is specified.
++
+.Example:
+[source,sh]
+----
+xms split myconfig.yaml
+----
+
+- `restore`::
+  Restores the primary monitor to its original state.
++
+.Example:
+[source,sh]
+----
+xms restore
+----
+
+=== Config Commands
+
+- `configs verify [CONFIG_FILE]`::
+  Verifies the configuration tree in the specified config file.
++
+.Example:
+[source,sh]
+----
+xms configs verify myconfig
+----
+
+- `configs edit [CONFIG_FILE]`::
+  Edits the specified config file using the default system editor.
++
+.Example:
+[source,sh]
+----
+xms configs edit myconfig
+----
+
+- `configs new <CONFIG_FILE>`::
+  Creates a new configuration file with the specified name.
++
+.Example:
+[source,sh]
+----
+xms configs new mynewconfig
+----
+
+- `configs print [CONFIG_FILE]`::
+  Prints the contents of the specified config file.
++
+.Example:
+[source,sh]
+----
+xms configs print myconfig
+----
+
+- `configs delete [CONFIG_FILE]`::
+  Deletes the specified config file after user confirmation.
++
+.Example:
+[source,sh]
+----
+xms configs delete myconfig
+----
+
+== Configuration
+
+Config files are stored in the `~/.config/x-screen-split/` directory. The default config file is `configs.yaml`.
+
+=== Configuration File Format
+
+The configuration files used by this application are written in YAML format. They define how the primary monitor should be split into virtual monitors or windows.
+
+Below is an example of a configuration file:
+
+[source,yaml]
+----
+nodes:
+  - type: vertical
+    nodes:
+      - width: 70
+        type: horizontal
+        nodes:
+          - width: 60
+            type: window
+          - width: 40
+            type: window
+      - width: 25
+        type: vertical
+        nodes:
+          - width: 50
+            type: window
+          - width: 50
+            type: window
+      - width: 5
+        type: window
+----
+
+==== Explanation
+
+- `nodes`:: This is the root key that contains a list of nodes. Each node represents a split or a window in the monitor.
+
+- `type`:: Specifies the type of split. It can be either `window`, `vertical` or `horizontal`.
+* `vertical` splits the monitor vertically (side by side).
+* `horizontal` splits the monitor horizontally (one above the other).
+* `window` Represents a leaf node, meaning that this is the final split, and it should be treated as a window.
+- `width`:: Defines the percentage of space the split or window will take relative to its parent container.
+
+This structure allows you to flexibly define how the monitor is split into various virtual monitors or windows, accommodating different screen setups and preferences.
+
+== Dependencies
+
+Minimum Python version: 3.10
+
+Python packages:
+- `typer`
+- `rich`
+
+== License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
