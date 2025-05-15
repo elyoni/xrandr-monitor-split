@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "xrandr-monitor-split"
-version = "0.2.0"
+version = "0.2.1"
 description = ""
 authors = ["Yehonatan Elentok <elyoni@gmail.com>"]
 readme = "README.adoc"
